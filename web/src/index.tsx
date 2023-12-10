@@ -14,6 +14,7 @@ import Layout from './Layout';
 import posts from './posts';
 import users from './users';
 import tags from './tags';
+import pulseiras from './pulseiras';
 
 render(
     <React.StrictMode>
@@ -33,6 +34,7 @@ render(
             <Resource name="posts" {...posts} />
             <Resource name="comments" {...comments} />
             <Resource name="tags" {...tags} />
+            <Resource name="pulseiras" {...pulseiras} />
             {permissions => (
                 <>
                     {permissions ? <Resource name="users" {...users} /> : null}

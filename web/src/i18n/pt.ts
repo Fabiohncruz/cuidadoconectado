@@ -36,6 +36,13 @@ export const mensagens = {
                 role: 'Permissão',
             },
         },
+        pulseiras: {
+            name: 'Pulseira |||| Pulseiras',
+            fields: {
+                userId: 'Usuário',
+                deviceId: 'Código da Pulseira',
+            },
+        },
     },
     post: {
         list: {

@@ -489,6 +489,13 @@ export default {
             parent_id: 5,
         },
     ],
+    pulseiras: [
+        {
+            id: 1,
+            userId: 3,
+            deviceId: 123123,
+        },
+    ],
     users: [
         {
             id: 1,
