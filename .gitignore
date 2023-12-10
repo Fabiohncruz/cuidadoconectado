@@ -1,0 +1,28 @@
+# Dependências
+node_modules/
+
+# Arquivos de build
+build/
+dist/
+
+# Arquivos de configuração
+.env
+.env.local
+.env.*.local
+
+# Logs e arquivos temporários
+logs/
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Outros arquivos e diretórios gerados
+*.pem
+*.pfx
+*.key
+*.suo
+*.user
+*.swp
+Thumbs.db
+.DS_Store
