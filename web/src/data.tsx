@@ -493,16 +493,19 @@ export default {
         {
             id: 1,
             name: 'Logan Schowalter',
+            email: 'loan@gmas.cai',
             role: 'admin',
         },
         {
             id: 2,
             name: 'Breanna Gibson',
+            email: 'Gibson@gmas.cai',
             role: 'user',
         },
         {
             id: 3,
             name: 'Annamarie Mayer',
+            email: 'Annamarie@gmas.cai',
             role: 'user',
         },
     ],

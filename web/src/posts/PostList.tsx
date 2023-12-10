@@ -166,6 +166,7 @@ const PostListDesktop = () => (
         >
             <TextField source="id" />
             <TextField source="title" cellClassName="title" />
+            <TextField source="description" cellClassName="title" />
             <DateField
                 source="published_at"
                 sortByOrder="DESC"

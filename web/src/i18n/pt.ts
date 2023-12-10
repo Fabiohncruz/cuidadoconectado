@@ -1,31 +1,32 @@
 import ptMessages from 'ra-language-pt-br';
 
-export const messages = {
+export const mensagens = {
     simple: {
         action: {
-            close: 'Close',
-            resetViews: 'Reset views',
+            close: 'Fechar',
+            resetViews: 'Resetar visualizações',
         },
-        'create-post': 'New post',
+        'create-post': 'Nova postagem',
     },
     ...ptMessages,
     resources: {
         posts: {
-            name: 'Post |||| Posts',
+            name: 'Postagem |||| Postagens',
             fields: {
-                commentable_short: 'Com.',
-                commentable: 'Commentable',
-                notifications: 'Notifications recipients',
-                nb_view: 'Nb views',
-                nb_comments: 'Nb comments',
-                password: 'Password (if protected post)',
-                pictures: 'Related Pictures',
+                commentable_short: 'Coment.',
+                commentable: 'Comentável',
+                notifications: 'Destinatários de notificações',
+                nb_view: 'Nb visualizações',
+                nb_comments: 'Nb comentários',
+                password: 'Senha (se a postagem for protegida)',
+                pictures: 'Imagens relacionadas',
+                title: 'Título'
             },
         },
         comments: {
-            name: 'Comment |||| Comments',
+            name: 'Comentário |||| Comentários',
             fields: {
-                post_id: 'Post',
+                post_id: 'Postagem',
             },
         },
         users: {
@@ -38,42 +39,42 @@ export const messages = {
     },
     post: {
         list: {
-            search: 'Search',
+            search: 'Buscar',
         },
         form: {
-            summary: 'Summary',
-            body: 'Body',
-            miscellaneous: 'Miscellaneous',
-            comments: 'Comments',
+            summary: 'Resumo',
+            body: 'Corpo',
+            miscellaneous: 'Diversos',
+            comments: 'Comentários',
         },
         edit: {
-            title: 'Post "%{title}"',
+            title: 'Postagem "%{title}"',
         },
         action: {
-            save_and_edit: 'Save and Edit',
-            save_and_add: 'Save and Add',
-            save_and_show: 'Save and Show',
-            save_with_average_note: 'Save with Note',
+            save_and_edit: 'Salvar e Editar',
+            save_and_add: 'Salvar e Adicionar',
+            save_and_show: 'Salvar e Mostrar',
+            save_with_average_note: 'Salvar com Nota Média',
         },
     },
     comment: {
         list: {
-            about: 'About',
+            about: 'Sobre',
         },
     },
     user: {
         list: {
-            search: 'Search',
+            search: 'Buscar',
         },
         form: {
-            summary: 'Summary',
-            security: 'Security',
+            summary: 'Resumo',
+            security: 'Segurança',
         },
         action: {
-            save_and_add: 'Save and Add',
-            save_and_show: 'Save and Show',
+            save_and_add: 'Salvar e Adicionar',
+            save_and_show: 'Salvar e Mostrar',
         },
     },
 };
 
-export default messages;
+export default mensagens;
