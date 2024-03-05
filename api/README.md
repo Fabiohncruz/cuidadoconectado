@@ -1,14 +1,29 @@
-# API Cuidado Conectado
+# Aplicativo Web Cuidado Conectado
 
+## Descrição
+
+A aplicação WEB do Projeto é construída com React e fornece uma interface de usuário interativa para interagir com a API
+e visualizar os dados do projeto.
+
+## Pré-requisitos
+
+- Node.js e npm instalados
 
 ## Como Iniciar
 
-```
-cd api
-npm run start
-```
-
-## Como testar
-
-Abrir Postman
-Escolher Collection e Rodar os Comandos
+    - Navegue até a pasta `app`:
+      ```
+      cd app
+      ```
+    - Instale as dependências:
+      ```
+      npm install
+      ```
+    - Inicie o aplicativo no emulador ou dispositivo conectado:
+      ```
+      npm start
+      ```
+    - Inicie App no Android
+      ```
+      press: a
+      ```

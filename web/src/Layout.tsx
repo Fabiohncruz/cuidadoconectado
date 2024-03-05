@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { AppBar, Layout, InspectorButton, TitlePortal } from 'react-admin';
+import { AppBar, Layout, TitlePortal } from 'react-admin';
 
 const MyAppBar = () => (
     <AppBar>
         <TitlePortal />
-        <InspectorButton />
     </AppBar>
 );
 
