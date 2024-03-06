@@ -26,6 +26,7 @@ const pulseriaSchema = new mongoose.Schema({
     required: true
   },
   apelido: String,
+  dataNascimento: Date,
   codigoConexao: {
     type: String,
     required: true,
@@ -33,13 +34,17 @@ const pulseriaSchema = new mongoose.Schema({
   },
   deviceId: {
     type: String,
-    unique: true
   },
   ativa: {
     type: Boolean,
     default: false
   },
-  deviceCode: Number
+  deviceCode: Number,
+  config: {
+    bpm: Boolean,
+    pressao: Boolean,
+    gps: Boolean,
+  }
 });
 const Pulseira = mongoose.model('pulseiras', pulseriaSchema);
 

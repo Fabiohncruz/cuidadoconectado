@@ -12,6 +12,9 @@ const CadastroDispositivoScreen: React.FC<CadastroDispositivoScreenProps> = ({ n
   const cadastrarDispositivo = () => {
     // Aqui você pode adicionar a lógica para cadastrar o dispositivo com o código fornecido
     console.log('Cadastrando dispositivo com código:', codigo);
+
+    // TODO fazer a integração com a API para registrar o dispositivo
+    // Se der certo,  no caso o código existir, redireciona para a tela de Monitor
     navigation.navigate('Monitor');
   };
 

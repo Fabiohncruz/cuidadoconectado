@@ -11,7 +11,7 @@ const formatDocuments = document => {
 
 const criarCrud = function(app, recurso, schema) {
 
-  // Rotas CRUD para usuários
+  // Rota CRUD para Criar um Recurso
   app.post(`/${recurso}`, async (req, res) => {
     try {
       const newDocument = new schema(req.body);
@@ -22,6 +22,7 @@ const criarCrud = function(app, recurso, schema) {
     }
   });
 
+  // Rota CRUD para Recupear uma Lista com varios recursos
   app.get(`/${recurso}`, async (req, res) => {
     try {
       const documents = await schema.find();
@@ -34,6 +35,7 @@ const criarCrud = function(app, recurso, schema) {
     }
   });
 
+  // Rota CRUD para Recupear um Recurso pelo seu ID
   app.get(`/${recurso}/:id`, async (req, res) => {
     try {
       const document = await schema.findById(req.params.id);
@@ -43,6 +45,7 @@ const criarCrud = function(app, recurso, schema) {
     }
   });
 
+  // Rota CRUD para Atualizar Integralmente um Recurso pelo seu ID
   app.put(`/${recurso}/:id`, async (req, res) => {
     try {
       const document = await schema.findByIdAndUpdate(req.params.id, req.body, {
@@ -54,6 +57,24 @@ const criarCrud = function(app, recurso, schema) {
     }
   });
 
+  // Rota CRUD para Atualizar Integralmente um Recurso Parcialmente pelo seu ID
+  app.patch(`/${recurso}/:id`, async (req, res) => {
+    try {
+      const document = await schema.findByIdAndUpdate(req.params.id, {
+        $set: req.body
+      }, {
+        new: true
+      });
+      res.json({
+        id: req.params.id,
+        data: document.toJSON()
+      });
+    } catch (error) {
+      res.status(404).json({ error: `${recurso} não encontrado` });
+    }
+  });
+
+  // Rota CRUD para Excluir um um Recurso pelo seu ID
   app.delete(`/${recurso}/:id`, async (req, res) => {
     try {
       await schema.findByIdAndDelete(req.params.id);
@@ -61,7 +82,7 @@ const criarCrud = function(app, recurso, schema) {
     } catch (error) {
       res.status(404).json({ error: `${recurso} não encontrado` });
     }
-  });
+  }); 
 };
 
 module.exports = {

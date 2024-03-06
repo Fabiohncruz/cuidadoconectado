@@ -17,6 +17,12 @@ export const mensagens = {
         userId: 'Usuário',
         codigoConexao: 'Código de Conexão',
         deviceId: 'Código da Pulseira',
+        dataNascimento: 'Data de Nascimento',
+        config: {
+          gps: 'Ver Localização em Tempo Real',
+          bpm: 'Monitorar Batimentos por Minuto (BPM)',
+          pressao: 'Monitorar Pressão Arterial'
+        }
       },
     },
   },

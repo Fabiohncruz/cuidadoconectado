@@ -10,6 +10,7 @@ import {
   SimpleForm,
   TextField,
   TextInput,
+  minLength,
 } from 'react-admin';
 
 import GroupIcon from '@mui/icons-material/Group';
@@ -44,7 +45,7 @@ const UsuarioCreate = () => {
       <SimpleForm>
         <TextInput source="displayName" fullWidth/>
         <TextInput source="email" fullWidth/>
-        <PasswordInput source="password"/>
+        <PasswordInput source="password" validate={[minLength(6)]} />
       </SimpleForm>
     </Create>
   );

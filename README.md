@@ -7,11 +7,13 @@ aplicação móvel (APP) é desenvolvida usando React Native.
 
 ## Estrutura do Projeto
 
+```
 cuidadoconecatdo/
 │
 ├── api/ # Pasta da API (Node.js + Mongo + Firebase)
 ├── web/ # Pasta da aplicação WEB (React)
 └── app/ # Pasta da aplicação móvel (React Native)
+```
 
 ## Pré-requisitos
 

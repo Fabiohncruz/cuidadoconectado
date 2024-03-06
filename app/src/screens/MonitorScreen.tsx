@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Button, Text } from '@rneui/themed';
 import { HealthMonitor } from '../service/health-monitor';
@@ -14,21 +14,23 @@ interface MonitorScreenProps {
 const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
 
   const { auth, setAuth } = useAuthContext();
+  const [monitoramento, setMonitoramento] = useState(false);
 
   useEffect(() => {
     console.log(MonitorScreen.name, auth);
     if (auth.authenticated) {
       healthMonitor.start();
+      setMonitoramento(true);
     }
     return () => {
       healthMonitor.stop();
+      setMonitoramento(false);
     };
   }, []);
 
   return <View>
-    <Text h1>Bem-vindo</Text>
 
-    <Text h3>Seu monitoramento está: {healthMonitor.isRunning() ? 'Ativo' : 'Inativo'}</Text>
+    <Text h3>Seu monitoramento está: {monitoramento ? 'Ativo' : 'Inativo'}</Text>
 
     <Button
       title="Desconectar"

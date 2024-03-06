@@ -45,6 +45,10 @@ export class HealthMonitor {
         accessType: 'write',
         recordType: 'HeartRate',
       },
+      {
+        accessType: 'read',
+        recordType: 'BloodPressure'
+      }
     ]);
 
     console.log('Solicitando permissões para o geolocation', 'TODO');

@@ -1,8 +1,11 @@
-import React from 'react';
+import React from "react";
 import {
   BooleanField,
+  BooleanInput,
   Create,
   Datagrid,
+  DateField,
+  DateInput,
   DeleteButton,
   Edit,
   EditButton,
@@ -10,14 +13,15 @@ import {
   NumberField,
   ReferenceField,
   SimpleForm,
+  TabbedForm,
   TextField,
   TextInput,
   useGetIdentity,
-} from 'react-admin';
+} from "react-admin";
 
 function generateAlphaCode(length) {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let alphaCode = '';
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  let alphaCode = "";
 
   for (let i = 0; i < length; i++) {
     const randomIndex = Math.floor(Math.random() * alphabet.length);
@@ -30,20 +34,20 @@ function generateAlphaCode(length) {
 const alphaCode = generateAlphaCode(6); // Altere o número para o comprimento desejado do código
 console.log(alphaCode);
 
-
 const PulseiraList = () => {
   return (
     <List>
       <Datagrid>
-        <TextField source="id"/>
+        <TextField source="id" />
         <ReferenceField source="usuarioId" reference="usuarios">
-          <TextField source="displayName"/>
+          <TextField source="displayName" />
         </ReferenceField>
-        <TextField source="apelido"/>
-        <BooleanField source="ativa"/>
-        <NumberField source="deviceId"/>
-        <EditButton/>
-        <DeleteButton/>
+        <TextField source="apelido" />
+        <DateField source="dataNascimento" />
+        <BooleanField source="ativa" />
+        <NumberField source="deviceId" />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );
@@ -51,22 +55,33 @@ const PulseiraList = () => {
 
 const PulseiraCreate = () => {
   const { data } = useGetIdentity();
-  const mapUsuarioId = formData => ({
+  const mapUsuarioId = (formData) => ({
     ...formData,
     usuarioId: data.id,
   });
   return (
     <Create transform={mapUsuarioId}>
-      <SimpleForm defaultValues={{
-        codigoConexao: generateAlphaCode(6),
-      }}>
-        {/*<ReferenceInput source="usuarioId" reference="usuarios">*/}
-        {/*  <SelectInput optionText="displayName"/>*/}
-        {/*</ReferenceInput>*/}
-        <TextInput source="apelido"/>
-        <TextInput source="codigoConexao"
-                   helperText={'Utilize esse código para adicionar no novo dispositivo'}/>
-      </SimpleForm>
+      <TabbedForm
+        defaultValues={{
+          codigoConexao: generateAlphaCode(6),
+        }}
+      >
+        <TabbedForm.Tab label="Informações">
+          <TextInput source="apelido" />
+          <DateInput source="dataNascimento" />
+          <TextInput
+            source="codigoConexao"
+            helperText={
+              "Utilize esse código para adicionar no novo dispositivo"
+            }
+          />
+        </TabbedForm.Tab>
+        <TabbedForm.Tab label="Configurações">
+          <BooleanInput source="config.bpm" />
+          <BooleanInput source="config.gps" />
+          <BooleanInput source="config.pressao" />
+        </TabbedForm.Tab>
+      </TabbedForm>
     </Create>
   );
 };
@@ -74,12 +89,23 @@ const PulseiraCreate = () => {
 const PulseiraEdit = () => {
   return (
     <Edit>
-      <SimpleForm>
-        <TextInput source="id"/>
-        <TextInput source="apelido"/>
-        <TextInput source="codigoConexao" helperText={'Utilize esse código para adicionar no novo dispositivo'}/>
-        <TextInput source="deviceId"/>
-      </SimpleForm>
+      <TabbedForm>
+        <TabbedForm.Tab label="Informações">
+          <TextInput source="apelido" />
+          <DateInput source="dataNascimento" />
+          <TextInput
+            source="codigoConexao"
+            helperText={
+              "Utilize esse código para adicionar no novo dispositivo"
+            }
+          />
+        </TabbedForm.Tab>
+        <TabbedForm.Tab label="Configurações">
+          <BooleanInput source="config.bpm" />
+          <BooleanInput source="config.gps" />
+          <BooleanInput source="config.pressao" />
+        </TabbedForm.Tab>
+      </TabbedForm>
     </Edit>
   );
 };
