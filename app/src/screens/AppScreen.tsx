@@ -6,7 +6,7 @@ interface AppScreenProps {
 }
 
 const AppScreen: React.FC<AppScreenProps> = ({ navigation }) => {
-  return <WebView source={{ uri: 'https://reactnative.dev/' }} style={{ flex: 1 }}/>;
+  return <WebView source={{ uri: 'http://192.168.0.115:8080' }} style={{ flex: 1 }}/>;
 };
 
 export default AppScreen;

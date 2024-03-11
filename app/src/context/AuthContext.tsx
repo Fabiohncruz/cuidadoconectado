@@ -3,14 +3,9 @@ import storage from './Storage.tsx';
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
-const initialAuthState: AuthState = {
-  authenticated: false,
-};
-
 export interface AuthState {
-  authenticated: boolean,
-  type?: 'login' | 'device',
-  accessToken?: string
+  codigoConexao?: string,
+  pessoaId?: string
 }
 
 interface AuthProviderProps {
@@ -19,14 +14,14 @@ interface AuthProviderProps {
 
 interface AuthContextData {
   ready: boolean,
-  auth: AuthState,
+  authState: AuthState,
   setAuth: (auth: AuthState) => Promise<void>,
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const [ready, setReady] = useState(false);
-  const [auth, setAuthState] = useState(initialAuthState);
+  const [authState, setAuthState] = useState({});
 
   // Get current auth state from AsyncStorage
   const getAuthState = async () => {
@@ -35,7 +30,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       setAuthState(authState);
 
     } catch (err) {
-      setAuthState(initialAuthState);
+      setAuthState({});
     }
     setReady(true);
   };
@@ -55,7 +50,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, ready }}>
+    <AuthContext.Provider value={{ authState, setAuth, ready }}>
       {children}
     </AuthContext.Provider>
   );

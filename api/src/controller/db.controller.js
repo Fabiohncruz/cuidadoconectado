@@ -1,5 +1,7 @@
 // Função para formatar os registros que vem do Banco de Dados para a API
 // O App web precisa que os ids sejam enviados como "id" ao invés de "_id"
+const express = require('express');
+const auth = require('../middleware/auth');
 const formatDocuments = document => {
   const values = document.toJSON();
   const { _id, __v, ...rest } = values;
@@ -9,10 +11,19 @@ const formatDocuments = document => {
   };
 };
 
-const criarCrud = function(app, recurso, schema) {
+/**
+ * Cria todas as rotas CRUD para um recurso definido por seu schema
+ * @param app
+ * @param recurso o path do recurso que será cruadi
+ * @param schema o schema do mongodb
+ * @param byUserId define se a lógica deve trazer apenas documentos criados por um usuário
+ */
+const criarCrud = function(schema, options) {
+  const recurso = schema.name;
+  const router = express.Router();
 
   // Rota CRUD para Criar um Recurso
-  app.post(`/${recurso}`, async (req, res) => {
+  router.post(`/`, async (req, res) => {
     try {
       const newDocument = new schema(req.body);
       const saved = await newDocument.save();
@@ -23,9 +34,13 @@ const criarCrud = function(app, recurso, schema) {
   });
 
   // Rota CRUD para Recupear uma Lista com varios recursos
-  app.get(`/${recurso}`, async (req, res) => {
+  router.get(`/`, async (req, res) => {
     try {
-      const documents = await schema.find();
+      let filter = {};
+      if(options.onlyOwn){
+        filter.usuarioId = req.principal.id;
+      }
+      const documents = await schema.find(filter);
       res.json({
         data: documents.map(formatDocuments),
         total: documents.length
@@ -36,9 +51,15 @@ const criarCrud = function(app, recurso, schema) {
   });
 
   // Rota CRUD para Recupear um Recurso pelo seu ID
-  app.get(`/${recurso}/:id`, async (req, res) => {
+  router.get(`/:id`, async (req, res) => {
     try {
-      const document = await schema.findById(req.params.id);
+      let filter = {
+        _id: req.params.id
+      };
+      if(options.onlyOwn){
+        filter.usuarioId = req.principal.id;
+      }
+      const document = await schema.findOne(filter);
       res.json(formatDocuments(document));
     } catch (error) {
       res.status(404).json({ error: `${recurso} não encontrado` });
@@ -46,9 +67,15 @@ const criarCrud = function(app, recurso, schema) {
   });
 
   // Rota CRUD para Atualizar Integralmente um Recurso pelo seu ID
-  app.put(`/${recurso}/:id`, async (req, res) => {
+  router.put(`/:id`, async (req, res) => {
     try {
-      const document = await schema.findByIdAndUpdate(req.params.id, req.body, {
+      let filter = {
+        _id: req.params.id
+      };
+      if(options.onlyOwn){
+        filter.usuarioId = req.principal.id;
+      }
+      const document = await schema.findOneAndUpdate(filter, req.body, {
         new: true
       });
       res.json(document);
@@ -58,9 +85,15 @@ const criarCrud = function(app, recurso, schema) {
   });
 
   // Rota CRUD para Atualizar Integralmente um Recurso Parcialmente pelo seu ID
-  app.patch(`/${recurso}/:id`, async (req, res) => {
+  router.patch(`/:id`, async (req, res) => {
     try {
-      const document = await schema.findByIdAndUpdate(req.params.id, {
+      let filter = {
+        _id: req.params.id
+      };
+      if(options.onlyOwn){
+        filter.usuarioId = req.principal.id;
+      }
+      const document = await schema.findOneAndUpdate(filter, {
         $set: req.body
       }, {
         new: true
@@ -75,14 +108,22 @@ const criarCrud = function(app, recurso, schema) {
   });
 
   // Rota CRUD para Excluir um um Recurso pelo seu ID
-  app.delete(`/${recurso}/:id`, async (req, res) => {
+  router.delete(`/:id`, async (req, res) => {
     try {
-      await schema.findByIdAndDelete(req.params.id);
+      let filter = {
+        _id: req.params.id
+      };
+      if(options.onlyOwn){
+        filter.usuarioId = req.principal.id;
+      }
+      await schema.findOneAndDelete(filter);
       res.json({ message: `${recurso} excluido com sucesso` });
     } catch (error) {
       res.status(404).json({ error: `${recurso} não encontrado` });
     }
-  }); 
+  });
+
+  return router;
 };
 
 module.exports = {

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
+import { ActivityIndicator, Alert, View } from 'react-native';
 import { Button, Text } from '@rneui/themed';
 import { HealthMonitor } from '../service/health-monitor';
 import { useAuthContext } from '../context/AuthContext.tsx';
-
-const healthMonitor = new HealthMonitor();
+import { useHttpClient } from '../service/http.tsx';
+import auth from '@react-native-firebase/auth';
 
 interface MonitorScreenProps {
   navigation: any; // navigation prop for navigation between screens
@@ -13,20 +13,65 @@ interface MonitorScreenProps {
 
 const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
 
-  const { auth, setAuth } = useAuthContext();
+  const healthMonitor = new HealthMonitor();
+
+  const { authState, setAuth } = useAuthContext();
+  const { httpClient, loading, error } = useHttpClient();
   const [monitoramento, setMonitoramento] = useState(false);
 
   useEffect(() => {
-    console.log(MonitorScreen.name, auth);
-    if (auth.authenticated) {
-      healthMonitor.start();
-      setMonitoramento(true);
-    }
+    const getPessoaById = (accessToken: string) => {
+      return httpClient('/pessoas/' + authState.pessoaId, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+        },
+      });
+    };
+
+    auth().currentUser?.getIdToken(true)
+      .then(getPessoaById)
+      .then(pessoa => {
+        console.log('Configuration envio para', pessoa.id);
+        // Método para enviar os dados para o Backend
+        const enviarDados = async (dados: any) => {
+
+          console.log('Push dados de monitoramento', pessoa.id);
+          await httpClient('/dados', {
+            method: 'post',
+            body: {
+              pessoaId: pessoa.id,
+              dados,
+            },
+          });
+        };
+
+        if (!pessoa) {
+          setAuth({});
+          navigation.navigate('CadastroDispositivo');
+          return;
+        }
+
+        // Registar o método no coletor de dados e inicia
+        healthMonitor.onCollect(enviarDados)
+          .start(pessoa.config)
+          .then(() => {
+            setMonitoramento(true);
+          });
+      });
+
     return () => {
       healthMonitor.stop();
       setMonitoramento(false);
     };
   }, []);
+
+  if (error) {
+    console.error(error);
+  }
+
+  if (loading) {
+    return <ActivityIndicator/>;
+  }
 
   return <View>
 
@@ -37,7 +82,7 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
       buttonStyle={{ backgroundColor: '#007bff', marginVertical: 10 }}
       onPress={async () => {
         await healthMonitor.stop();
-        await setAuth({ authenticated: false });
+        await setAuth({});
         Alert.alert(
           'Usuário Desconectado',
           `Seu perfil foi desconectado e seu monitoramento não está mais ativo`,

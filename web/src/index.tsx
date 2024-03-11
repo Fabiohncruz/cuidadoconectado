@@ -9,13 +9,13 @@ import dataProvider from './providers/dataProvider';
 
 import Layout from './Layout';
 import usuarios from './features/usuarios';
-import pulseiras from './features/pulseiras';
+import pulseiras from './features/pessoas';
 
 const firebaseConfig = {
-  projectId: 'zinc-hall-404714',
-  apiKey: 'AIzaSyBh7Y7c9jiq8joRZy_Q7vT6aydYPwlewtc',
-  authDomain: `zinc-hall-404714.firebaseapp.com`,
-  storageBucket: `zinc-hall-404714.appspot.com`,
+  projectId: 'cuidado-conectado-8b8e9',
+  apiKey: 'AIzaSyB9BeHJkJX8Oa-ynXGBuLHH6mgoQoi_510',
+  authDomain: `cuidado-conectado-8b8e9.firebaseapp.com`,
+  storageBucket: `cuidado-conectado-8b8e9.appspot.com`,
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -31,8 +31,8 @@ render(
       title="Cuidado Conectado"
       layout={Layout}
     >
-      <Resource name="usuarios" {...usuarios} />
-      <Resource name="pulseiras" {...pulseiras} />
+      <Resource {...usuarios} />
+      <Resource {...pulseiras} />
     </Admin>
   </React.StrictMode>,
   document.getElementById('root'),

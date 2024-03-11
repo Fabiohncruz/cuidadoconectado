@@ -1,6 +1,7 @@
 import { fetchUtils, useAuthProvider } from 'react-admin';
 
-const apiUrl = 'http://localhost:3000';
+// @ts-ignore
+export const apiUrl = import.meta.env.VITE_API;
 
 const httpClient = (url, options = {}) => {
   return fetchUtils.fetchJson(

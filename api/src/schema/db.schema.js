@@ -6,49 +6,57 @@ mongoose.connect(process.env.MONGO_CONNECTION, {
   useUnifiedTopology: true
 });
 
+const DadoMonitoramento = {
+  type: { type: String },
+  result: Object
+};
+
 // Definir o esquema do usuário
 const sensorSchema = new mongoose.Schema({
-  userId: {
+  pessoaId: {
     type: String,
     required: true
   },
-  pulseiraId: {
-    type: String,
-    required: true
-  }
+  dados: [DadoMonitoramento]
 });
-// Criar um modelo com o esquema definido
-const Sensor = mongoose.model('dados', sensorSchema);
 
-const pulseriaSchema = new mongoose.Schema({
+// Criar um modelo com o esquema definido
+const Dado = mongoose.model('dados', sensorSchema);
+
+const pessoaSchema = new mongoose.Schema({
   usuarioId: {
+    doc: 'Determina o Id do Usuário para quem essa pessoa foi cadastrada',
     type: String,
     required: true
   },
-  apelido: String,
-  dataNascimento: Date,
   codigoConexao: {
     type: String,
     required: true,
     unique: true
   },
-  deviceId: {
-    type: String,
-  },
-  ativa: {
-    type: Boolean,
-    default: false
-  },
-  deviceCode: Number,
+  nome: String,
+  dataNascimento: Date,
+  dispositivos: [
+    {
+      deviceId: String,
+      ativo: Boolean
+    }
+  ],
   config: {
     bpm: Boolean,
     pressao: Boolean,
-    gps: Boolean,
+    gps: Boolean
+  },
+  monitoramento: {
+    ultimaLeitura: {
+      time: Date,
+      dados: DadoMonitoramento
+    }
   }
 });
-const Pulseira = mongoose.model('pulseiras', pulseriaSchema);
+const Pessoa = mongoose.model('pessoas', pessoaSchema);
 
 module.exports = {
-  Pulseira,
-  Sensor
+  Pessoa,
+  Dado
 };

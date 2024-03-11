@@ -1,8 +1,8 @@
-import { fetchUtils } from "react-admin";
-import queryString from "query-string";
-import { parseDataAndUpload } from "./fileParser";
+import { fetchUtils } from 'react-admin';
+import queryString from 'query-string';
+import { parseDataAndUpload } from './fileParser';
+import { apiUrl } from './httpClient';
 
-const apiUrl = "http://localhost:3000";
 const httpClient = fetchUtils.fetchJson;
 
 const withJwt = (jwt) => ({
@@ -72,7 +72,7 @@ export default (authProvider) => {
       const parsedData = await parseDataAndUpload(resource, params.data);
       const jwt = await authProvider.getJWTToken();
       const { json } = await httpClient(`${apiUrl}/${resource}`, {
-        method: "POST",
+        method: 'POST',
         body: JSON.stringify(parsedData),
         ...withJwt(jwt),
       });
@@ -84,7 +84,7 @@ export default (authProvider) => {
       const jwt = await authProvider.getJWTToken();
       const parsedData = await parseDataAndUpload(resource, params.data);
       const { json } = await httpClient(url, {
-        method: "PATCH",
+        method: 'PATCH',
         body: JSON.stringify(parsedData),
         ...withJwt(jwt),
       });
@@ -98,7 +98,7 @@ export default (authProvider) => {
       const url = `${apiUrl}/${resource}?${queryString.stringify(query)}`;
       const jwt = await authProvider.getJWTToken();
       const { json } = await httpClient(url, {
-        method: "PUT",
+        method: 'PUT',
         body: JSON.stringify(params.data),
         ...withJwt(jwt),
       });
@@ -109,7 +109,7 @@ export default (authProvider) => {
       const url = `${apiUrl}/${resource}/${params.id}`;
       const jwt = await authProvider.getJWTToken();
       const { json } = await httpClient(url, {
-        method: "DELETE",
+        method: 'DELETE',
         ...withJwt(jwt),
       });
       return { data: json };
@@ -119,7 +119,7 @@ export default (authProvider) => {
       const url = `${apiUrl}/${resource}`;
       const jwt = await authProvider.getJWTToken();
       const { json } = await httpClient(url, {
-        method: "DELETE",
+        method: 'DELETE',
         body: JSON.stringify(params.ids),
         ...withJwt(jwt),
       });

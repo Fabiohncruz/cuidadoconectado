@@ -1,6 +1,6 @@
 import ptMessages from 'ra-language-pt-br';
 
-export const mensagens = {
+export const mensagens: any = {
   ...ptMessages,
   resources: {
     usuarios: {
@@ -11,12 +11,12 @@ export const mensagens = {
         password: 'Senha',
       },
     },
-    pulseiras: {
-      name: 'Pulseira |||| Pulseiras',
+    pessoas: {
+      name: 'Pessoa |||| Pessoas',
       fields: {
-        userId: 'Usuário',
+        usuarioId: 'Responsável',
         codigoConexao: 'Código de Conexão',
-        deviceId: 'Código da Pulseira',
+        deviceId: 'Código do Dispositivo',
         dataNascimento: 'Data de Nascimento',
         config: {
           gps: 'Ver Localização em Tempo Real',

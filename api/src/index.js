@@ -1,12 +1,11 @@
-// app.js
-
 const express = require('express');
 const cors = require('cors');
-const mongoose = require('mongoose');
-const { criarCrud } = require('./db.controller');
-const { getAllUsers, getUserById, saveUser, updateUser, deleteUserById } = require('./firebase.controller');
-const { Sensor, Pulseira } = require('./db.schema');
-const { registrarPulseira } = require('./pulseira.controller');
+const {  Pessoa } = require('./schema/db.schema');
+const { criarCrud } = require('./controller/db.controller');
+const { getAllUsers, getUserById, saveUser, updateUser, deleteUserById } = require('./firebase/firebase');
+const { registrarDispositivo } = require('./controller/dispositivo.controller');
+const auth = require('./middleware/auth');
+const { registrarDados } = require('./controller/dados.controller');
 
 const app = express();
 app.use(cors());
@@ -14,36 +13,18 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-criarCrud(app, 'dados', Sensor);
-criarCrud(app, 'pulseiras', Pulseira);
+// Cria crud de pessoas, onde retorna apenas registros criados pelo usuário logado
+app.use('/pessoas', auth(), criarCrud(Pessoa, { onlyOwn: true }));
 
-app.post('/monitoramento/registrar', registrarPulseira);
+app.post('/dispositivos', registrarDispositivo);
 
-app.post('/usuarios', saveUser);
-app.get('/usuarios', getAllUsers);
-app.get('/usuarios/:id', getUserById);
-app.patch('/usuarios/:id', updateUser);
-app.put('/usuarios/:id', updateUser);
-app.delete('/usuarios/:id', deleteUserById);
-
-
-app.get('/usuarios/:id/dados', async (req, res) => {
-  try {
-    const query = {
-      userId: req.params.id
-    };
-
-    // verificar se existe uma queryParam pulseiraId para fazer a query
-    if (req.query.pulseiraId) {
-      query.pulseiraId = req.query.pulseiraId;
-    }
-    const dados = await Sensor.find(query);
-    res.json(dados);
-  } catch (error) {
-    res.status(404).json({ error: `${recurso} não encontrado` });
-  }
-});
-
+app.post('/usuarios', auth(), saveUser);
+app.get('/usuarios', auth(), getAllUsers);
+app.get('/usuarios/:id', auth(), getUserById);
+app.patch('/usuarios/:id', auth(), updateUser);
+app.put('/usuarios/:id', auth(), updateUser);
+app.delete('/usuarios/:id', auth(), deleteUserById);
+app.post('/dados', registrarDados);
 
 // Iniciar o servidor
 app.listen(port, () => {

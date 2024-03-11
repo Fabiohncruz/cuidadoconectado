@@ -4,9 +4,16 @@ import BackgroundService from 'react-native-background-actions';
 import collectors from './collectors';
 import { PermissionsAndroid } from 'react-native';
 
+export interface HealthMonitorConfig {
+  bpm: boolean,
+  pressao: boolean,
+  gps: boolean
+}
+
 export class HealthMonitor {
 
   private _options;
+  private _onData: ((data: any) => Promise<void>) | undefined;
 
   constructor(options?: any) {
     this._options = {
@@ -26,7 +33,12 @@ export class HealthMonitor {
     };
   }
 
-  public async start(): Promise<void> {
+  public onCollect(func: (data: any) => Promise<void>) {
+    this._onData = func;
+    return this;
+  }
+
+  public async start(config?: HealthMonitorConfig): Promise<void> {
     const isInitialized = await initialize();
     if (!await this.checkAvailability()) {
       throw new Error('Verifique se o Health Connect está instalado ou atualizado.');
@@ -34,8 +46,6 @@ export class HealthMonitor {
     if (!isInitialized) {
       throw new Error('Não foi possível se conectar com o Health Connect');
     }
-
-    console.log('Solicitando permissões para o health connect');
     await requestPermission([
       {
         accessType: 'read',
@@ -47,11 +57,9 @@ export class HealthMonitor {
       },
       {
         accessType: 'read',
-        recordType: 'BloodPressure'
-      }
+        recordType: 'BloodPressure',
+      },
     ]);
-
-    console.log('Solicitando permissões para o geolocation', 'TODO');
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
       {
@@ -61,17 +69,13 @@ export class HealthMonitor {
         buttonPositive: 'OK',
       },
     );
-    console.log('granted', granted);
 
-    return BackgroundService.start(this.backgroundTask, this._options);
+    // TODO check granted permission before start collecting some data
+    return BackgroundService.start(this.backgroundTask.bind(this), this._options);
   }
 
   public stop() {
     return BackgroundService.stop();
-  }
-
-  public isRunning() {
-    return BackgroundService.isRunning();
   }
 
   private async checkAvailability() {
@@ -96,11 +100,18 @@ export class HealthMonitor {
   private async backgroundTask(taskDataArguments: any) {
 
     const task = async () => {
-      console.log('Running collectors', new Date());
-      const results = await Promise.all(collectors.map(p => p()));
-      console.log('Collected ', results);
+
+      // TODO pegar via taskDataArguments quais sao as config dos collectors que devem ser lidos
+
+      console.log(new Date(), HealthMonitor.name, 'collector [started]');
+      const results = await Promise.all(Object.values(collectors).map(p => p()));
+      console.log(new Date(), HealthMonitor.name, 'collector [finished]');
+      if (this._onData) {
+        await this._onData(results);
+      }
     };
+
     await task();
-    setInterval(task, taskDataArguments.interval);
+    setInterval(task.bind(this), taskDataArguments.interval);
   }
 }

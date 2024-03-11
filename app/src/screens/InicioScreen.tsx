@@ -10,17 +10,12 @@ interface InicioScreenProps {
 }
 
 const InicioScreen: React.FC<InicioScreenProps> = ({ navigation }) => {
-  const { ready, auth, setAuth } = useAuthContext();
+  const { ready, authState } = useAuthContext();
 
   useEffect(() => {
-    console.log(ready, auth);
     let redirect;
-    if (ready && auth.authenticated) {
-      if (auth.type === 'login') {
-        // se o usuário tiver se autneticado com login, tela inicial é a logada
-        redirect = 'Sample';
-      } else if (auth.type === 'device') {
-        // caso seja um dispositvio, tela inicial é a monitor
+    if (ready) {
+      if (authState.codigoConexao) {
         redirect = 'Monitor';
       }
     }
@@ -36,22 +31,24 @@ const InicioScreen: React.FC<InicioScreenProps> = ({ navigation }) => {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text h1>Bem-vindo</Text>
       <Button
-        title="Efetuar Login como Tutor/Responsável"
+        title="Entrar como Tutor/Responsável"
         buttonStyle={{ backgroundColor: '#007bff', marginVertical: 10 }}
         onPress={() => {
-          navigation.navigate('Login');
+          navigation.navigate('App');
         }}
       />
       <Button
-        title="Adicionar Dispositivo"
+        title="Entrar com Código para Acompanhamento"
         buttonStyle={{ backgroundColor: '#28a745', marginVertical: 10 }}
         onPress={() => {
-          setAuth({
-            authenticated: true,
-            accessToken: '',
-            type: 'device',
-          });
           navigation.navigate('CadastroDispositivo');
+        }}
+      />
+      <Button
+        title="Criar Conta"
+        buttonStyle={{ backgroundColor: '#7b7f86', marginVertical: 10 }}
+        onPress={() => {
+          navigation.navigate('CriarConta');
         }}
       />
       <Icon
