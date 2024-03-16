@@ -27,5 +27,4 @@ logs/
 Thumbs.db
 .DS_Store
 .idea/
-
-/api/service-account.json
+service-account.json
