@@ -7,7 +7,7 @@ dist/
 
 # Arquivos de configuração
 .env
-.env.local
+.env.production
 .env.*.local
 
 # Logs e arquivos temporários
@@ -26,3 +26,4 @@ logs/
 *.swp
 Thumbs.db
 .DS_Store
+.idea/
