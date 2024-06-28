@@ -27,6 +27,8 @@ Acessar o Banco Mongo:
 
 ## Como Iniciar
 
+Abrir um terminal para cada aplicativo no VSCode
+
 1. **API (Node.js + Mongo + Firebase)**
     - Navegue até a pasta `api`:
       ```

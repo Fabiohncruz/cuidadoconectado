@@ -56,7 +56,20 @@ const pessoaSchema = new mongoose.Schema({
 });
 const Pessoa = mongoose.model('pessoas', pessoaSchema);
 
+
+const notificacaoSchema = new mongoose.Schema({
+  usuarioId: {
+    doc: 'Determina o Id do Usuário para quem essa pessoa foi cadastrada',
+    type: String,
+    required: true
+  },
+  descricao: String,
+  time: Date,
+});
+const Notificacao = mongoose.model('notificacoes', notificacaoSchema);
+
 module.exports = {
   Pessoa,
-  Dado
+  Dado,
+  Notificacao
 };

@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const {  Pessoa } = require('./schema/db.schema');
+const {  Pessoa, Notificacao } = require('./schema/db.schema');
 const { criarCrud } = require('./controller/db.controller');
 const { getAllUsers, getUserById, saveUser, updateUser, deleteUserById } = require('./firebase/firebase');
 const { registrarDispositivo } = require('./controller/dispositivo.controller');
@@ -15,6 +15,8 @@ app.use(express.json());
 
 // Cria crud de pessoas, onde retorna apenas registros criados pelo usuário logado
 app.use('/pessoas', auth(), criarCrud(Pessoa, { onlyOwn: true }));
+
+app.use('/notificacoes', auth(), criarCrud(Notificacao, { onlyOwn: true }));
 
 app.post('/dispositivos', registrarDispositivo);
 

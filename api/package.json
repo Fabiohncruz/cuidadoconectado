@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "export GOOGLE_APPLICATION_CREDENTIALS=/Users/pflima/zinc-hall-404714.json; nodemon -r dotenv/config src/index.js",
+    "start": "nodemon -r dotenv/config src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -10,6 +10,7 @@ import dataProvider from './providers/dataProvider';
 import Layout from './Layout';
 import usuarios from './features/usuarios';
 import pulseiras from './features/pessoas';
+import notificacoes from './features/notificacoes';
 
 const firebaseConfig = {
   projectId: 'cuidado-conectado-8b8e9',
@@ -33,6 +34,7 @@ render(
     >
       <Resource {...usuarios} />
       <Resource {...pulseiras} />
+      <Resource {...notificacoes} />
     </Admin>
   </React.StrictMode>,
   document.getElementById('root'),

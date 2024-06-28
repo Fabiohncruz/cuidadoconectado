@@ -44,7 +44,7 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
             return;
           }
 
-          console.log('Push dados de monitoramento', pessoa.id);
+          console.log(new Date(), ' Push dados de monitoramento', pessoa.id);
           await httpClient('/dados', {
             method: 'post',
             body: {

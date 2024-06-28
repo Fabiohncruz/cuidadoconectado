@@ -44,7 +44,6 @@ const PessoaList = () => {
   return (
     <List pagination={false}>
       <Datagrid rowClick="show" bulkActionButtons={false}>
-        <TextField source="id"/>
         <ReferenceField source="usuarioId" reference="usuarios">
           <TextField source="displayName"/>
         </ReferenceField>
@@ -153,6 +152,9 @@ const PessoaShow = () => {
                 const url = `https://www.google.com/maps/place/${latLong}/${latLong}`;
                 return <Typography component={Link} href={url} target="_blank">Ver no Maps</Typography>;
               }
+              if (dado.type === 'pressao') {
+                return <Typography>{dado.result[0]?.diastolic?.inMillimetersOfMercury}/{dado.result[0]?.systolic?.inMillimetersOfMercury}mmHg</Typography>;
+              }
               return <Typography>{JSON.stringify(dado)}</Typography>;
             }}/>
             <FunctionField label="Última Leitura" render={dado => {
@@ -162,6 +164,10 @@ const PessoaShow = () => {
               }
               if (dado.type === 'gps') {
                 const timeAgo = moment(new Date(dado.currentLocation.time)).locale('pt-br').fromNow();
+                return <Typography>{timeAgo}</Typography>;
+              }
+              if (dado.type === 'pressao') {
+                const timeAgo = moment(new Date(dado.result[0]?.time)).locale('pt-br').fromNow();
                 return <Typography>{timeAgo}</Typography>;
               }
               return <Typography>{JSON.stringify(dado)}</Typography>;

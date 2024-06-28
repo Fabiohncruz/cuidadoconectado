@@ -28,3 +28,6 @@ Thumbs.db
 .DS_Store
 .idea/
 service-account.json
+app/android/.gradle/
+.gradle/
+app/android/.gradle/file-system.probe

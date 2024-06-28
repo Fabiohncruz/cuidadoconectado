@@ -59,6 +59,10 @@ export class HealthMonitor {
         accessType: 'read',
         recordType: 'BloodPressure',
       },
+      {
+        accessType: 'write',
+        recordType: 'BloodPressure',
+      },
     ]);
     const granted = await PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,

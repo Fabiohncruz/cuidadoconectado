@@ -1,4 +1,5 @@
 const { Pessoa, Dado } = require('../schema/db.schema');
+const processarDados = require('../service/processarDados');
 
 module.exports.registrarDados = async (req, res) => {
   try {
@@ -35,6 +36,8 @@ module.exports.registrarDados = async (req, res) => {
         }
       }
     });
+
+    await processarDados(pessoaId, dados);
 
     res.status(201).send({});
   } catch (e) {
