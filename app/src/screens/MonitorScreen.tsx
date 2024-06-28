@@ -21,6 +21,9 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
 
   useEffect(() => {
     const getPessoaById = (accessToken: string) => {
+      if(!authState.pessoaId){
+        return Promise.reject();
+      }
       return httpClient('/pessoas/' + authState.pessoaId, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -30,10 +33,16 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
 
     auth().currentUser?.getIdToken(true)
       .then(getPessoaById)
-      .then(pessoa => {
-        console.log('Configuration envio para', pessoa.id);
+      .then(response => {
+
+        console.log('Configuration envio para', response.id);
         // Método para enviar os dados para o Backend
-        const enviarDados = async (dados: any) => {
+        const enviarDados = async (pessoa: any, dados: any) => {
+
+          if(!pessoa || !pessoa.id){
+            console.warn('Não foi possível enviar os dados', pessoa);
+            return;
+          }
 
           console.log('Push dados de monitoramento', pessoa.id);
           await httpClient('/dados', {
@@ -45,15 +54,15 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
           });
         };
 
-        if (!pessoa) {
+        if (!response) {
           setAuth({});
           navigation.navigate('CadastroDispositivo');
           return;
         }
 
         // Registar o método no coletor de dados e inicia
-        healthMonitor.onCollect(enviarDados)
-          .start(pessoa.config)
+        healthMonitor.onCollect(dados => enviarDados(response, dados))
+          .start(response.config)
           .then(() => {
             setMonitoramento(true);
           });
@@ -63,7 +72,7 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
       healthMonitor.stop();
       setMonitoramento(false);
     };
-  }, []);
+  }, [authState]);
 
   if (error) {
     console.error(error);

@@ -56,6 +56,13 @@ const InicioScreen: React.FC<InicioScreenProps> = ({ navigation }) => {
         color="black"
         size={50}
       />
+      <Button
+        title="Adicionar Dados"
+        buttonStyle={{ backgroundColor: '#7b7f86', marginVertical: 10 }}
+        onPress={() => {
+          navigation.navigate('Sample');
+        }}
+      />
     </View>
   );
 };

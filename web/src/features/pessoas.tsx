@@ -10,6 +10,7 @@ import {
   DeleteButton,
   Edit,
   EditButton,
+  FunctionField,
   List,
   ReferenceField,
   Show,
@@ -20,7 +21,9 @@ import {
   useGetIdentity,
 } from 'react-admin';
 import ElderlyIcon from '@mui/icons-material/Elderly';
-import { Typography } from '@mui/material';
+import { Link, Typography } from '@mui/material';
+import moment from 'moment';
+import 'moment/locale/pt-br';
 
 function generateAlphaCode(length) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -47,7 +50,7 @@ const PessoaList = () => {
         </ReferenceField>
         <TextField source="nome"/>
         <DateField source="dataNascimento"/>
-        <TextField source="codigoConexao" />
+        <TextField source="codigoConexao"/>
         <EditButton/>
         <DeleteButton/>
       </Datagrid>
@@ -132,6 +135,37 @@ const PessoaShow = () => {
           }>
             <TextField source="deviceId"/>
             <BooleanField source="ativo"/>
+          </Datagrid>
+        </ArrayField>
+      </TabbedShowLayout.Tab>
+      <TabbedShowLayout.Tab label="Monitoramento">
+        <ArrayField label={false} source="monitoramento.ultimaLeitura.dados">
+          <Datagrid bulkActionButtons={false} empty={
+            <Typography variant="body2">Nenhum dado registrado</Typography>
+          }>
+            <TextField label="Tipo da Leitura" source="type"/>
+            <FunctionField label="Valor" render={(dado) => {
+              if (dado.type === 'bpm') {
+                return <Typography>{JSON.stringify(dado.result?.[0]?.samples?.[0]?.beatsPerMinute)} BPM</Typography>;
+              }
+              if (dado.type === 'gps') {
+                const latLong = `${dado.currentLocation.latitude},${dado.currentLocation.longitude}`;
+                const url = `https://www.google.com/maps/place/${latLong}/${latLong}`;
+                return <Typography component={Link} href={url} target="_blank">Ver no Maps</Typography>;
+              }
+              return <Typography>{JSON.stringify(dado)}</Typography>;
+            }}/>
+            <FunctionField label="Última Leitura" render={dado => {
+              if (dado.type === 'bpm') {
+                const timeAgo = moment(dado.result?.[0]?.samples?.[0]?.time).locale('pt-br').fromNow();
+                return <Typography>{timeAgo}</Typography>;
+              }
+              if (dado.type === 'gps') {
+                const timeAgo = moment(new Date(dado.currentLocation.time)).locale('pt-br').fromNow();
+                return <Typography>{timeAgo}</Typography>;
+              }
+              return <Typography>{JSON.stringify(dado)}</Typography>;
+            }} />
           </Datagrid>
         </ArrayField>
       </TabbedShowLayout.Tab>

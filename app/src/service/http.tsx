@@ -25,7 +25,12 @@ export const useHttpClient = () => {
   const client = async (input: RequestInfo, init?: Omit<RequestInit, 'body'> & { body?: any }) => {
     setLoading(true);
     return httpClient(input, init)
-      .then(res => res.json())
+      .then(res => {
+        if(res.status >= 400){
+          return Promise.reject(res.json());
+        }
+        return Promise.resolve(res.json());
+      })
       .then(data => {
         setData(data);
         setLoading(false);
