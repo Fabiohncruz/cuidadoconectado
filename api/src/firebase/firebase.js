@@ -8,6 +8,7 @@ if (process.env.NODE_ENV === 'production') {
   try {
     //const serviceAccount = require('../../service-account.json');
     const serviceAccount = JSON.parse(process.env.SERVICE_ACCOUNT);
+    console.log(serviceAccount)
     credential = admin.credential.cert(serviceAccount);
   } catch (e) {
     console.log('Verifique se o arquivo: "service-account.json" foi corretamente adicionado na pasta principal.');
