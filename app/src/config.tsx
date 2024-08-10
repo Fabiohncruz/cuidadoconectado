@@ -1,2 +1,2 @@
-export const apiUrl = `http://192.168.0.136:3000`;
-export const webUrl  = `http://192.168.0.136:8080`;
+export const apiUrl = `https://cuidadoconectado-api-34v4nzadia-uc.a.run.app`;
+export const webUrl  = `https://zinc-style-428700-r8.web.app`;

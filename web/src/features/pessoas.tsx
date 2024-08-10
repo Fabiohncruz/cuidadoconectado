@@ -1,12 +1,14 @@
 import React from 'react';
 import {
   ArrayField,
+  ArrayInput,
   BooleanField,
   BooleanInput,
   Create,
   Datagrid,
   DateField,
   DateInput,
+  TimeInput,
   DeleteButton,
   Edit,
   EditButton,
@@ -14,6 +16,7 @@ import {
   List,
   ReferenceField,
   Show,
+  SimpleFormIterator,
   TabbedForm,
   TabbedShowLayout,
   TextField,
@@ -45,13 +48,13 @@ const PessoaList = () => {
     <List pagination={false}>
       <Datagrid rowClick="show" bulkActionButtons={false}>
         <ReferenceField source="usuarioId" reference="usuarios">
-          <TextField source="displayName"/>
+          <TextField source="displayName" />
         </ReferenceField>
-        <TextField source="nome"/>
-        <DateField source="dataNascimento"/>
-        <TextField source="codigoConexao"/>
-        <EditButton/>
-        <DeleteButton/>
+        <TextField source="nome" />
+        <DateField source="dataNascimento" />
+        <TextField source="codigoConexao" />
+        <EditButton />
+        <DeleteButton />
       </Datagrid>
     </List>
   );
@@ -71,8 +74,8 @@ const PessoaCreate = () => {
         }}
       >
         <TabbedForm.Tab label="Informações">
-          <TextInput source="nome"/>
-          <DateInput source="dataNascimento"/>
+          <TextInput source="nome" />
+          <DateInput source="dataNascimento" />
           <TextInput
             source="codigoConexao"
             helperText={
@@ -81,9 +84,9 @@ const PessoaCreate = () => {
           />
         </TabbedForm.Tab>
         <TabbedForm.Tab label="Configurações">
-          <BooleanInput source="config.bpm"/>
-          <BooleanInput source="config.gps"/>
-          <BooleanInput source="config.pressao"/>
+          <BooleanInput source="config.bpm" />
+          <BooleanInput source="config.gps" />
+          <BooleanInput source="config.pressao" />
         </TabbedForm.Tab>
       </TabbedForm>
     </Create>
@@ -95,8 +98,8 @@ const PessoaEdit = () => {
     <Edit>
       <TabbedForm>
         <TabbedForm.Tab label="Informações">
-          <TextInput source="nome"/>
-          <DateInput source="dataNascimento"/>
+          <TextInput source="nome" />
+          <DateInput source="dataNascimento" />
           <TextInput
             source="codigoConexao"
             helperText={
@@ -105,9 +108,18 @@ const PessoaEdit = () => {
           />
         </TabbedForm.Tab>
         <TabbedForm.Tab label="Configurações">
-          <BooleanInput source="config.bpm"/>
-          <BooleanInput source="config.gps"/>
-          <BooleanInput source="config.pressao"/>
+          <BooleanInput source="config.bpm" />
+          <BooleanInput source="config.gps" />
+          <BooleanInput source="config.pressao" />
+        </TabbedForm.Tab>
+        <TabbedForm.Tab label="Medicamentos">
+          <ArrayInput source="medicamentos">
+            <SimpleFormIterator inline>
+              <TextInput source="nome" helperText={false} />
+              <TimeInput source="horario"
+                helperText={false} />
+            </SimpleFormIterator>
+          </ArrayInput>
         </TabbedForm.Tab>
       </TabbedForm>
     </Edit>
@@ -118,22 +130,32 @@ const PessoaShow = () => {
   return <Show>
     <TabbedShowLayout>
       <TabbedShowLayout.Tab label="Informações">
-        <TextField source="nome"/>
-        <DateField source="dataNascimento"/>
+        <TextField source="nome" />
+        <DateField source="dataNascimento" />
       </TabbedShowLayout.Tab>
       <TabbedShowLayout.Tab label="Configurações">
-        <BooleanField source="config.bpm"/>
-        <BooleanField source="config.gps"/>
-        <BooleanField source="config.pressao"/>
+        <BooleanField source="config.bpm" />
+        <BooleanField source="config.gps" />
+        <BooleanField source="config.pressao" />
       </TabbedShowLayout.Tab>
       <TabbedShowLayout.Tab label="Dispositivos">
-        <TextField source="codigoConexao"/>
+        <TextField source="codigoConexao" />
         <ArrayField source="dispositivos">
           <Datagrid bulkActionButtons={false} empty={
             <Typography variant="body2">Nenhum dispositivo cadastrado</Typography>
           }>
-            <TextField source="deviceId"/>
-            <BooleanField source="ativo"/>
+            <TextField source="deviceId" />
+            <BooleanField source="ativo" />
+          </Datagrid>
+        </ArrayField>
+      </TabbedShowLayout.Tab>
+      <TabbedShowLayout.Tab label="Medicamentos">
+        <ArrayField label={false} source="medicamentos">
+          <Datagrid bulkActionButtons={false} empty={
+            <Typography variant="body2">Nenhum medicamento cadastrado</Typography>
+          }>
+            <TextField source="nome" />
+            <DateField showDate={false} showTime={true} source="horario" />
           </Datagrid>
         </ArrayField>
       </TabbedShowLayout.Tab>
@@ -142,7 +164,7 @@ const PessoaShow = () => {
           <Datagrid bulkActionButtons={false} empty={
             <Typography variant="body2">Nenhum dado registrado</Typography>
           }>
-            <TextField label="Tipo da Leitura" source="type"/>
+            <TextField label="Tipo da Leitura" source="type" />
             <FunctionField label="Valor" render={(dado) => {
               if (dado.type === 'bpm') {
                 return <Typography>{JSON.stringify(dado.result?.[0]?.samples?.[0]?.beatsPerMinute)} BPM</Typography>;
@@ -156,7 +178,7 @@ const PessoaShow = () => {
                 return <Typography>{dado.result[0]?.diastolic?.inMillimetersOfMercury}/{dado.result[0]?.systolic?.inMillimetersOfMercury}mmHg</Typography>;
               }
               return <Typography>{JSON.stringify(dado)}</Typography>;
-            }}/>
+            }} />
             <FunctionField label="Última Leitura" render={dado => {
               if (dado.type === 'bpm') {
                 const timeAgo = moment(dado.result?.[0]?.samples?.[0]?.time).locale('pt-br').fromNow();

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
-import { Button, Text } from '@rneui/themed';
+import { Button, ListItem, Text } from '@rneui/themed';
 import { HealthMonitor } from '../service/health-monitor';
 import { useAuthContext } from '../context/AuthContext.tsx';
 import { useHttpClient } from '../service/http.tsx';
@@ -18,10 +18,11 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
   const { authState, setAuth } = useAuthContext();
   const { httpClient, loading, error } = useHttpClient();
   const [monitoramento, setMonitoramento] = useState(false);
+  const [pessoa, setPessoa] = useState();
 
   useEffect(() => {
     const getPessoaById = (accessToken: string) => {
-      if(!authState.pessoaId){
+      if (!authState.pessoaId) {
         return Promise.reject();
       }
       return httpClient('/pessoas/' + authState.pessoaId, {
@@ -35,11 +36,13 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
       .then(getPessoaById)
       .then(response => {
 
+        setPessoa(response);
+
         console.log('Configuration envio para', response.id);
         // Método para enviar os dados para o Backend
         const enviarDados = async (pessoa: any, dados: any) => {
 
-          if(!pessoa || !pessoa.id){
+          if (!pessoa || !pessoa.id) {
             console.warn('Não foi possível enviar os dados', pessoa);
             return;
           }
@@ -79,12 +82,24 @@ const MonitorScreen = ({ navigation }: MonitorScreenProps) => {
   }
 
   if (loading) {
-    return <ActivityIndicator/>;
+    return <ActivityIndicator />;
   }
 
   return <View>
 
     <Text h3>Seu monitoramento está: {monitoramento ? 'Ativo' : 'Inativo'}</Text>
+
+
+    <Text h4>Lista de Medicamentos</Text>
+
+    <ListItem>
+      {pessoa?.medicamentos?.map(medicamento => (
+        <ListItem.Content>
+        <ListItem.Title>{medicamento.nome}</ListItem.Title>
+        <ListItem.Subtitle>{new Date(medicamento.horario).getHours()?.toString()?.padStart(2, '0')}:{new Date(medicamento.horario)?.getUTCMinutes()?.toString()?.padStart(2, '0')}</ListItem.Subtitle>
+      </ListItem.Content>
+      ))}
+    </ListItem>
 
     <Button
       title="Desconectar"

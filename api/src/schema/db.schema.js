@@ -42,6 +42,10 @@ const pessoaSchema = new mongoose.Schema({
       ativo: Boolean
     }
   ],
+  medicamentos: [{
+    nome: String,
+    horario: String
+  }],
   config: {
     bpm: Boolean,
     pressao: Boolean,

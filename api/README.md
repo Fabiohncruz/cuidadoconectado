@@ -27,3 +27,10 @@ e visualizar os dados do projeto.
       ```
       press: a
       ```
+
+
+## Subir para nuvem
+
+docker build . -t fabiohncruz/cuidadoconectado-api:latest
+docker push
+
