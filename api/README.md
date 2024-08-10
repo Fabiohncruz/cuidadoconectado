@@ -31,6 +31,5 @@ e visualizar os dados do projeto.
 
 ## Subir para nuvem
 
-docker build . -t fabiohncruz/cuidadoconectado-api:latest
-docker push
+docker build . -t fabiohncruz/cuidadoconectado-api:latest && docker push  fabiohncruz/cuidadoconectado-api:latest
 

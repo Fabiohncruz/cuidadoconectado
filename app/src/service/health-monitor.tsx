@@ -1,4 +1,4 @@
-import { getSdkStatus, initialize, requestPermission, SdkAvailabilityStatus } from 'react-native-health-connect';
+import { getSdkStatus, initialize, insertRecords, requestPermission, SdkAvailabilityStatus } from 'react-native-health-connect';
 import BackgroundService from 'react-native-background-actions';
 
 import collectors from './collectors';
@@ -9,6 +9,46 @@ export interface HealthMonitorConfig {
   pressao: boolean,
   gps: boolean
 }
+
+const getTodayDate = (): Date => {
+  return new Date();
+};
+
+const insertSampleData = () => {
+  const generateRandomHeartRate = () => Math.floor(Math.random() * (100 - 60 + 1)) + 60; // Random BPM between 60 and 100
+  const generateRandomSystolic = () => Math.floor(Math.random() * (130 - 110 + 1)) + 110; // Random systolic between 110 and 130
+  const generateRandomDiastolic = () => Math.floor(Math.random() * (85 - 70 + 1)) + 70; // Random diastolic between 70 and 85
+
+  insertRecords([
+    {
+      recordType: 'HeartRate',
+      samples: [
+        {
+          time: getTodayDate().toISOString(),
+          beatsPerMinute: generateRandomHeartRate(),
+        },
+      ],
+      startTime: getTodayDate().toISOString(),
+      endTime: new Date().toISOString(),
+    },
+  ]).then((ids) => {
+    console.log('HeartRate inserted ', { ids });
+  });
+  insertRecords([
+    {
+      recordType: 'BloodPressure',
+      time: getTodayDate().toISOString(),
+      systolic: { value: generateRandomSystolic(), unit: 'millimetersOfMercury' },
+      diastolic: { value: generateRandomDiastolic(), unit: 'millimetersOfMercury' },
+      bodyPosition: 0,
+      measurementLocation: 0,
+    },
+  ]).then((ids) => {
+    console.log('BloodPressure inserted ', { ids });
+  }).catch(e => {
+    console.warn('BloodPressure error ', e.message);
+  });
+};
 
 export class HealthMonitor {
 
@@ -104,7 +144,7 @@ export class HealthMonitor {
   private async backgroundTask(taskDataArguments: any) {
 
     const task = async () => {
-
+      insertSampleData();
       // TODO pegar via taskDataArguments quais sao as config dos collectors que devem ser lidos
 
       console.log(new Date(), HealthMonitor.name, 'collector [started]');

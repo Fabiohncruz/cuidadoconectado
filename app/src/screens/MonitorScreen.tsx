@@ -1,11 +1,11 @@
+import auth from '@react-native-firebase/auth';
+import { Button, ListItem, Text } from '@rneui/themed';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Alert, View } from 'react-native';
-import { Button, ListItem, Text } from '@rneui/themed';
-import { HealthMonitor } from '../service/health-monitor';
 import { useAuthContext } from '../context/AuthContext.tsx';
+import { HealthMonitor } from '../service/health-monitor';
 import { useHttpClient } from '../service/http.tsx';
-import auth from '@react-native-firebase/auth';
 
 interface MonitorScreenProps {
   navigation: any; // navigation prop for navigation between screens

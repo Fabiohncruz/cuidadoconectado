@@ -189,6 +189,7 @@ const PessoaShow = () => {
                 return <Typography>{timeAgo}</Typography>;
               }
               if (dado.type === 'pressao') {
+                console.log(dado)
                 const timeAgo = moment(new Date(dado.result[0]?.time)).locale('pt-br').fromNow();
                 return <Typography>{timeAgo}</Typography>;
               }
